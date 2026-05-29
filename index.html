@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天空纪 - 全球飞机选购平台 | 飞机参数对比与选购</title>
+  <meta name="description" content="天空纪是全球飞机选购平台，涵盖民航客机、军用飞机、公务机、直升机等200+款飞机详细参数对比，支持多维度筛选、价格对比、飞机补全等功能。">
+  <meta name="keywords" content="飞机选购,飞机对比,民航客机,军用飞机,公务机,直升机,波音,空客,飞机参数,航空">
+  <meta name="author" content="天空纪">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="天空纪 - 全球飞机选购平台">
+  <meta property="og:description" content="涵盖200+款飞机详细参数，支持多维度筛选对比">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="天空纪 - 全球飞机选购平台">
+  <meta name="twitter:description" content="涵盖200+款飞机详细参数，支持多维度筛选对比">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+  <link rel="canonical" href="">
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">✈️</span>
+        <span class="logo-text">天空纪</span>
+        <span class="logo-sub">全球飞机选购平台</span>
+      </div>
+      <nav class="nav">
+        <a href="#" class="nav-link active" data-tab="select">选飞机</a>
+        <a href="#" class="nav-link" data-tab="compare">对比</a>
+        <a href="submit.html" class="nav-link">用户中心</a>
+        <a href="admin.html" class="nav-link">数据管理</a>
+      </nav>
+      <div class="header-right">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="搜索品牌、型号..." autocomplete="off">
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 分类标签 -->
+  <section class="category-bar">
+    <div class="container">
+      <div class="category-tabs" id="categoryTabs">
+        <button class="category-tab active" data-category="all">
+          <span class="tab-icon">🌐</span>
+          <span>全部</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 筛选区域 -->
+  <section class="filter-section">
+    <div class="container">
+      <!-- 品牌筛选 -->
+      <div class="filter-group">
+        <div class="filter-label">品牌</div>
+        <div class="filter-options" id="brandFilter">
+          <button class="filter-btn active" data-brand="all">不限</button>
+        </div>
+        <button class="filter-expand" id="brandExpand">展开 ▼</button>
+      </div>
+
+      <!-- 价格筛选 -->
+      <div class="filter-group">
+        <div class="filter-label">价格</div>
+        <div class="filter-options" id="priceFilter">
+          <button class="filter-btn active" data-price="all">不限</button>
+          <button class="filter-btn" data-price="0-500">500万以下</button>
+          <button class="filter-btn" data-price="500-2000">500-2000万</button>
+          <button class="filter-btn" data-price="2000-5000">2000-5000万</button>
+          <button class="filter-btn" data-price="5000-10000">5000万-1亿</button>
+          <button class="filter-btn" data-price="10000-30000">1-3亿</button>
+          <button class="filter-btn" data-price="30000-999999">3亿以上</button>
+        </div>
+      </div>
+
+      <!-- 发动机数量筛选 -->
+      <div class="filter-group">
+        <div class="filter-label">发动机数</div>
+        <div class="filter-options" id="engineFilter">
+          <button class="filter-btn active" data-engine="all">不限</button>
+          <button class="filter-btn" data-engine="1">单发</button>
+          <button class="filter-btn" data-engine="2">双发</button>
+          <button class="filter-btn" data-engine="3">三发</button>
+          <button class="filter-btn" data-engine="4">四发</button>
+          <button class="filter-btn" data-engine="6">六发</button>
+        </div>
+      </div>
+
+      <!-- 高级筛选展开 -->
+      <div class="advanced-filter-toggle" id="advancedToggle">
+        <span>更多筛选条件</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+
+      <div class="advanced-filters" id="advancedFilters">
+        <!-- 座位数筛选 -->
+        <div class="filter-group">
+          <div class="filter-label">座位数</div>
+          <div class="filter-options" id="seatFilter">
+            <button class="filter-btn active" data-seat="all">不限</button>
+            <button class="filter-btn" data-seat="0-2">1-2座</button>
+            <button class="filter-btn" data-seat="2-10">3-10座</button>
+            <button class="filter-btn" data-seat="10-50">11-50座</button>
+            <button class="filter-btn" data-seat="50-200">51-200座</button>
+            <button class="filter-btn" data-seat="200-9999">200座以上</button>
+          </div>
+        </div>
+
+        <!-- 航程筛选 -->
+        <div class="filter-group">
+          <div class="filter-label">航程(km)</div>
+          <div class="filter-options" id="rangeFilter">
+            <button class="filter-btn active" data-range="all">不限</button>
+            <button class="filter-btn" data-range="0-1000">1000km以下</button>
+            <button class="filter-btn" data-range="1000-3000">1000-3000km</button>
+            <button class="filter-btn" data-range="3000-6000">3000-6000km</button>
+            <button class="filter-btn" data-range="6000-10000">6000-10000km</button>
+            <button class="filter-btn" data-range="10000-999999">10000km以上</button>
+          </div>
+        </div>
+
+        <!-- 速度筛选 -->
+        <div class="filter-group">
+          <div class="filter-label">巡航速度</div>
+          <div class="filter-options" id="speedFilter">
+            <button class="filter-btn active" data-speed="all">不限</button>
+            <button class="filter-btn" data-speed="0-300">300km/h以下</button>
+            <button class="filter-btn" data-speed="300-600">300-600km/h</button>
+            <button class="filter-btn" data-speed="600-900">600-900km/h</button>
+            <button class="filter-btn" data-speed="900-99999">900km/h以上</button>
+          </div>
+        </div>
+
+        <!-- 发动机类型筛选 -->
+        <div class="filter-group">
+          <div class="filter-label">发动机类型</div>
+          <div class="filter-options" id="engineTypeFilter">
+            <button class="filter-btn active" data-enginetype="all">不限</button>
+          </div>
+        </div>
+
+        <!-- 产地筛选 -->
+        <div class="filter-group">
+          <div class="filter-label">产地</div>
+          <div class="filter-options" id="countryFilter">
+            <button class="filter-btn active" data-country="all">不限</button>
+          </div>
+        </div>
+
+        <!-- 在产状态 -->
+        <div class="filter-group">
+          <div class="filter-label">生产状态</div>
+          <div class="filter-options" id="statusFilter">
+            <button class="filter-btn active" data-status="all">不限</button>
+            <button class="filter-btn" data-status="在产">在产</button>
+            <button class="filter-btn" data-status="停产">已停产</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 已选筛选条件 -->
+      <div class="active-filters" id="activeFilters"></div>
+    </div>
+  </section>
+
+  <!-- 排序与结果统计 -->
+  <section class="result-bar">
+    <div class="container">
+      <div class="result-count">
+        共 <span id="resultCount">0</span> 款飞机
+      </div>
+      <div class="sort-options">
+        <span class="sort-label">排序：</span>
+        <button class="sort-btn active" data-sort="default">默认</button>
+        <button class="sort-btn" data-sort="price-asc">价格低→高</button>
+        <button class="sort-btn" data-sort="price-desc">价格高→低</button>
+        <button class="sort-btn" data-sort="range-desc">航程远→近</button>
+        <button class="sort-btn" data-sort="speed-desc">速度高→低</button>
+        <button class="sort-btn" data-sort="passengers-desc">座位多→少</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 飞机列表 -->
+  <main class="main-content">
+    <div class="container">
+      <div class="airplane-grid" id="airplaneGrid"></div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">没有找到符合条件的飞机</div>
+        <div class="empty-hint">请尝试调整筛选条件</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 飞机详情弹窗 -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- 对比面板 -->
+  <div class="compare-panel" id="comparePanel">
+    <div class="compare-header">
+      <span>对比栏 (<span id="compareCount">0</span>/3)</span>
+      <button class="compare-clear" id="compareClear">清空</button>
+    </div>
+    <div class="compare-items" id="compareItems"></div>
+    <button class="compare-btn" id="compareBtn" disabled>开始对比</button>
+  </div>
+
+  <!-- 对比弹窗 -->
+  <div class="modal-overlay" id="compareModal">
+    <div class="modal-content modal-wide">
+      <button class="modal-close" id="compareModalClose">✕</button>
+      <h2 class="compare-title">飞机参数对比</h2>
+      <div class="compare-table-wrapper" id="compareTableWrapper"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>天空纪 - 全球飞机选购平台 | 数据仅供参考</p>
+      <p class="footer-links">
+        <a href="submit.html">用户中心</a> |
+        <a href="privacy.html">隐私政策</a> |
+        <a href="terms.html">免责声明</a> |
+        <a href="admin.html">管理后台</a>
+      </p>
+      <p class="footer-copy">&copy; 2026 天空纪 SkyEra. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

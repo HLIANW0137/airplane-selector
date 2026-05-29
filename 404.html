@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>页面未找到 - 天空纪</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f7fa;
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .error-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+    }
+    .error-content { max-width: 500px; }
+    .error-icon {
+      font-size: 120px;
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .error-code {
+      font-size: 72px;
+      font-weight: 800;
+      color: #1a73e8;
+      margin-bottom: 16px;
+    }
+    .error-title {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .error-desc {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .error-actions { display: flex; gap: 16px; justify-content: center; }
+    .btn {
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #1557b0; }
+    .btn-outline {
+      background: #fff;
+      color: #222;
+      border: 1px solid #e0e0e0;
+    }
+    .btn-outline:hover { background: #f8f9fa; }
+    footer {
+      background: #2c3e50;
+      color: #bdc3c7;
+      text-align: center;
+      padding: 16px;
+      font-size: 13px;
+    }
+    footer a { color: #bdc3c7; }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div class="error-content">
+      <div class="error-icon">✈️</div>
+      <div class="error-code">404</div>
+      <h1 class="error-title">页面未找到</h1>
+      <p class="error-desc">
+        您要查找的页面可能已被删除、更改名称或暂时不可用。<br>
+        请检查网址是否正确，或返回首页重新开始。
+      </p>
+      <div class="error-actions">
+        <a href="index.html" class="btn btn-primary">返回首页</a>
+        <a href="javascript:history.back()" class="btn btn-outline">返回上页</a>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2026 天空纪 - 全球飞机选购平台</p>
+  </footer>
+</body>
+</html>

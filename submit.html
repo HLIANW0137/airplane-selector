@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天空纪 - 用户中心</title>
+  <link rel="stylesheet" href="css/user.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+</head>
+<body>
+  <header class="user-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">✈️</span>
+        <span class="logo-text">天空纪</span>
+      </div>
+      <nav>
+        <a href="index.html" class="nav-link">首页</a>
+        <a href="submit.html" class="nav-link active">用户中心</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="user-main">
+    <div class="container">
+      <!-- 用户信息卡片 -->
+      <div class="user-card">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <div class="user-nickname" id="userNickname">加载中...</div>
+          <div class="user-id">ID: <span id="userId">...</span></div>
+          <div class="user-hint">请记住您的用户ID，下次访问自动识别</div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="editNicknameBtn">修改昵称</button>
+      </div>
+
+      <!-- 草稿区 -->
+      <div class="drafts-section" id="draftsSection" style="display:none">
+        <div class="content-card">
+          <h2>📝 我的草稿 <span class="draft-count" id="draftCount">0/2</span></h2>
+          <p class="hint">撤回的提交会保存为草稿，最多保留2份，3天后自动过期。</p>
+          <div id="draftsList" class="drafts-list"></div>
+        </div>
+      </div>
+
+      <!-- 功能标签页 -->
+      <div class="tabs">
+        <button class="tab active" data-tab="submit">提交飞机数据</button>
+        <button class="tab" data-tab="my-submissions">我的提交</button>
+        <button class="tab" data-tab="supplement">补全信息</button>
+        <button class="tab" data-tab="message">给开发者留言</button>
+        <button class="tab" data-tab="my-messages">我的留言</button>
+      </div>
+
+      <!-- 提交飞机数据 -->
+      <div class="tab-content active" id="tab-submit">
+        <div class="content-card">
+          <h2 id="submitFormTitle">提交飞机数据</h2>
+          <p class="hint">填写飞机信息后提交，管理员审核通过后将显示在首页。不支持上传图片。</p>
+          <form id="submitForm" class="submit-form">
+            <input type="hidden" id="s_editDraftId" value="">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>飞机名称 *</label>
+                <input type="text" id="s_name" required placeholder="如：波音787-10">
+              </div>
+              <div class="form-group">
+                <label>品牌 *</label>
+                <select id="s_brand" required></select>
+              </div>
+              <div class="form-group">
+                <label>型号 *</label>
+                <input type="text" id="s_model" required placeholder="如：787-10">
+              </div>
+              <div class="form-group">
+                <label>分类 *</label>
+                <select id="s_category" required></select>
+              </div>
+              <div class="form-group">
+                <label>产地</label>
+                <input type="text" id="s_country" placeholder="如：美国">
+              </div>
+              <div class="form-group">
+                <label>首飞时间</label>
+                <input type="text" id="s_firstFlight" placeholder="如：2017年">
+              </div>
+              <div class="form-group">
+                <label>生产状态</label>
+                <select id="s_status">
+                  <option value="在产">在产</option>
+                  <option value="停产">已停产</option>
+                  <option value="损毁">损毁</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>发动机数量</label>
+                <input type="number" id="s_engineCount" min="0" max="10" placeholder="2">
+              </div>
+              <div class="form-group">
+                <label>发动机类型</label>
+                <select id="s_engineType">
+                  <option value="涡轮风扇">涡轮风扇</option>
+                  <option value="涡轮螺旋桨">涡轮螺旋桨</option>
+                  <option value="涡轮轴">涡轮轴</option>
+                  <option value="涡轮风扇(加力)">涡轮风扇(加力)</option>
+                  <option value="活塞发动机">活塞发动机</option>
+                  <option value="电动">电动</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>发动机型号</label>
+                <input type="text" id="s_engineModel" placeholder="如：GEnx-1B">
+              </div>
+              <div class="form-group">
+                <label>最大座位数</label>
+                <input type="number" id="s_maxPassengers" min="0" placeholder="296">
+              </div>
+              <div class="form-group">
+                <label>典型座位数</label>
+                <input type="number" id="s_typicalPassengers" min="0" placeholder="250">
+              </div>
+              <div class="form-group">
+                <label>最大航程(km)</label>
+                <input type="number" id="s_maxRange" min="0" placeholder="14140">
+              </div>
+              <div class="form-group">
+                <label>巡航速度(km/h)</label>
+                <input type="number" id="s_cruiseSpeed" min="0" placeholder="903">
+              </div>
+              <div class="form-group">
+                <label>最大速度(km/h)</label>
+                <input type="number" id="s_maxSpeed" min="0" placeholder="954">
+              </div>
+              <div class="form-group">
+                <label>实用升限(m)</label>
+                <input type="number" id="s_serviceCeiling" min="0" placeholder="13100">
+              </div>
+              <div class="form-group">
+                <label>最大起飞重量(kg)</label>
+                <input type="number" id="s_maxTakeoffWeight" min="0" placeholder="254011">
+              </div>
+              <div class="form-group">
+                <label>空重(kg)</label>
+                <input type="number" id="s_emptyWeight" min="0" placeholder="119950">
+              </div>
+              <div class="form-group">
+                <label>翼展(m)</label>
+                <input type="number" id="s_wingspan" min="0" step="0.01" placeholder="60.12">
+              </div>
+              <div class="form-group">
+                <label>机身长度(m)</label>
+                <input type="number" id="s_length" min="0" step="0.01" placeholder="62.81">
+              </div>
+              <div class="form-group">
+                <label>高度(m)</label>
+                <input type="number" id="s_height" min="0" step="0.01" placeholder="17.02">
+              </div>
+              <div class="form-group">
+                <label>机舱宽度(m)</label>
+                <input type="number" id="s_cabinWidth" min="0" step="0.01" placeholder="5.49">
+              </div>
+              <div class="form-group">
+                <label>机舱高度(m)</label>
+                <input type="number" id="s_cabinHeight" min="0" step="0.01" placeholder="2.44">
+              </div>
+              <div class="form-group">
+                <label>机舱长度(m)</label>
+                <input type="number" id="s_cabinLength" min="0" step="0.01" placeholder="46.5">
+              </div>
+              <div class="form-group">
+                <label>燃油容量(L)</label>
+                <input type="number" id="s_fuelCapacity" min="0" placeholder="126210">
+              </div>
+              <div class="form-group">
+                <label>燃油消耗(L/h)</label>
+                <input type="number" id="s_fuelConsumption" min="0" placeholder="5400">
+              </div>
+              <div class="form-group">
+                <label>载货量(kg)</label>
+                <input type="number" id="s_cargoCapacity" min="0" placeholder="货机填写">
+              </div>
+              <div class="form-group">
+                <label>最低价格</label>
+                <input type="number" id="s_priceMin" min="0" placeholder="26500">
+              </div>
+              <div class="form-group">
+                <label>最高价格</label>
+                <input type="number" id="s_priceMax" min="0" placeholder="30000">
+              </div>
+              <div class="form-group">
+                <label>价格单位</label>
+                <select id="s_priceUnit">
+                  <option value="万美元">万美元</option>
+                  <option value="亿人民币">亿人民币</option>
+                  <option value="万欧元">万欧元</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <label>飞机描述</label>
+              <textarea id="s_description" rows="3" placeholder="简要描述这架飞机的特点"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-outline" id="saveDraftBtn">保存草稿</button>
+              <button type="submit" class="btn btn-primary">提交审核</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 我的提交 -->
+      <div class="tab-content" id="tab-my-submissions">
+        <div class="content-card">
+          <h2>我的提交</h2>
+          <div id="mySubmissionsList" class="submissions-list">
+            <div class="empty-hint">暂无提交记录</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 补全信息 -->
+      <div class="tab-content" id="tab-supplement">
+        <div class="content-card">
+          <h2>补全飞机信息</h2>
+          <p class="hint">选择一架飞机，补充缺失或错误的数据。只需填写需要修改的字段，未填写的字段将保留原始数据。</p>
+          <div class="supplement-select">
+            <div class="form-group">
+              <label>选择要补全的飞机</label>
+              <select id="supplementAirplane">
+                <option value="">请选择飞机...</option>
+              </select>
+            </div>
+          </div>
+          <div id="supplementFormArea" style="display:none">
+            <form id="supplementForm" class="submit-form">
+              <input type="hidden" id="sup_airplaneId" value="">
+              <div class="supplement-notice">💡 只需填写需要补全的字段，留空表示保留原数据</div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>飞机名称</label>
+                  <input type="text" id="sup_name" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>产地</label>
+                  <input type="text" id="sup_country" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>首飞时间</label>
+                  <input type="text" id="sup_firstFlight" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>发动机数量</label>
+                  <input type="number" id="sup_engineCount" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>发动机型号</label>
+                  <input type="text" id="sup_engineModel" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最大座位数</label>
+                  <input type="number" id="sup_maxPassengers" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>典型座位数</label>
+                  <input type="number" id="sup_typicalPassengers" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最大航程(km)</label>
+                  <input type="number" id="sup_maxRange" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>巡航速度(km/h)</label>
+                  <input type="number" id="sup_cruiseSpeed" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最大速度(km/h)</label>
+                  <input type="number" id="sup_maxSpeed" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>实用升限(m)</label>
+                  <input type="number" id="sup_serviceCeiling" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最大起飞重量(kg)</label>
+                  <input type="number" id="sup_maxTakeoffWeight" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>空重(kg)</label>
+                  <input type="number" id="sup_emptyWeight" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>翼展(m)</label>
+                  <input type="number" id="sup_wingspan" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>机身长度(m)</label>
+                  <input type="number" id="sup_length" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>高度(m)</label>
+                  <input type="number" id="sup_height" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>机舱宽度(m)</label>
+                  <input type="number" id="sup_cabinWidth" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>机舱高度(m)</label>
+                  <input type="number" id="sup_cabinHeight" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>机舱长度(m)</label>
+                  <input type="number" id="sup_cabinLength" min="0" step="0.01" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>燃油容量(L)</label>
+                  <input type="number" id="sup_fuelCapacity" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>燃油消耗(L/h)</label>
+                  <input type="number" id="sup_fuelConsumption" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最低价格</label>
+                  <input type="number" id="sup_priceMin" min="0" placeholder="留空保留原值">
+                </div>
+                <div class="form-group">
+                  <label>最高价格</label>
+                  <input type="number" id="sup_priceMax" min="0" placeholder="留空保留原值">
+                </div>
+              </div>
+              <div class="form-group full-width">
+                <label>飞机描述</label>
+                <textarea id="sup_description" rows="3" placeholder="留空保留原值"></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">提交补全信息</button>
+              </div>
+            </form>
+          </div>
+          <div id="mySupplementsList" class="submissions-list" style="margin-top:24px">
+            <h3>我的补全记录</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- 给开发者留言 -->
+      <div class="tab-content" id="tab-message">
+        <div class="content-card">
+          <h2>给开发者留言</h2>
+          <p class="hint">您的留言只有管理员可见，管理员会尽快回复。</p>
+          <form id="messageForm">
+            <div class="form-group">
+              <label>留言内容（1000字以内）</label>
+              <textarea id="msgContent" rows="6" maxlength="1000" placeholder="请输入您的留言、建议或反馈..."></textarea>
+              <div class="char-count"><span id="charCount">0</span>/1000</div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">提交留言</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 我的留言 -->
+      <div class="tab-content" id="tab-my-messages">
+        <div class="content-card">
+          <h2>我的留言</h2>
+          <div id="myMessagesList" class="messages-list">
+            <div class="empty-hint">暂无留言记录</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/user.js"></script>
+</body>
+</html>

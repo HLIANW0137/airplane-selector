@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天空纪 - 数据管理后台</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+</head>
+<body>
+  <script>
+  (function() {
+    var pwd = prompt('请输入管理密码：');
+    if (pwd !== 'skyera2026') {
+      if (pwd !== null) alert('密码错误');
+      document.write('<div style="text-align:center;padding:80px;font-size:18px;color:#e74c3c;">⛔ 访问被拒绝，<a href="index.html">返回首页</a></div>');
+      document.close();
+      throw new Error('auth failed');
+    }
+  })();
+  </script>
+
+  <header class="admin-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⚙️</span>
+        <span class="logo-text">天空纪数据管理</span>
+      </div>
+      <nav>
+        <a href="index.html" class="back-link">← 返回前台</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="container">
+      <!-- 操作栏 -->
+      <div class="action-bar">
+        <div class="action-left">
+          <button class="btn btn-primary" id="addAirplaneBtn">+ 添加飞机</button>
+          <button class="btn btn-secondary" id="addBrandBtn">+ 添加品牌</button>
+          <button class="btn btn-secondary" id="addCategoryBtn">+ 添加分类</button>
+        </div>
+        <div class="action-right">
+          <button class="btn btn-outline" id="importBtn">📥 导入JSON</button>
+          <button class="btn btn-outline" id="exportBtn">📤 导出JSON</button>
+          <input type="file" id="importFile" accept=".json" style="display:none">
+        </div>
+      </div>
+
+      <!-- 统计卡片 -->
+      <div class="stats-row" id="statsRow"></div>
+
+      <!-- 飞机列表 -->
+      <div class="table-card">
+        <div class="table-header">
+          <h2>飞机数据列表</h2>
+          <div class="table-filter">
+            <input type="text" id="tableSearch" placeholder="搜索飞机名称、型号...">
+            <select id="tableCategoryFilter">
+              <option value="all">全部分类</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="airplaneTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>品牌</th>
+                <th>分类</th>
+                <th>发动机</th>
+                <th>座位</th>
+                <th>航程</th>
+                <th>价格(万美元)</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="airplaneTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 用户提交审核 -->
+      <div class="table-card" id="submissionsCard">
+        <div class="table-header">
+          <h2>待审核提交 <span class="badge" id="pendingCount">0</span></h2>
+          <div class="table-filter">
+            <select id="submissionStatusFilter">
+              <option value="pending">待审核</option>
+              <option value="approved">已通过</option>
+              <option value="rejected">已拒绝</option>
+              <option value="all">全部</option>
+            </select>
+          </div>
+        </div>
+        <div id="submissionsList" class="submissions-container"></div>
+      </div>
+
+      <!-- 补全信息审核 -->
+      <div class="table-card" id="supplementsCard">
+        <div class="table-header">
+          <h2>补全信息审核 <span class="badge" id="pendingSupplementCount">0</span></h2>
+          <div class="table-filter">
+            <select id="supplementStatusFilter">
+              <option value="pending">待审核</option>
+              <option value="approved">已通过</option>
+              <option value="rejected">已拒绝</option>
+              <option value="all">全部</option>
+            </select>
+          </div>
+        </div>
+        <div id="supplementsList" class="submissions-container"></div>
+      </div>
+
+      <!-- 用户留言管理 -->
+      <div class="table-card" id="messagesCard">
+        <div class="table-header">
+          <h2>用户留言 <span class="badge" id="unreadCount">0</span></h2>
+        </div>
+        <div id="adminMessagesList" class="messages-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 添加/编辑飞机弹窗 -->
+  <div class="modal-overlay" id="airplaneModal">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h2 id="airplaneModalTitle">添加飞机</h2>
+        <button class="modal-close" id="airplaneModalClose">&times;</button>
+      </div>
+      <form id="airplaneForm" class="modal-form">
+        <input type="hidden" id="editId">
+        <div class="form-section">
+          <h3>基本信息</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>飞机名称 *</label>
+              <input type="text" id="f_name" required placeholder="如：波音737-800">
+            </div>
+            <div class="form-group">
+              <label>品牌 *</label>
+              <select id="f_brand" required></select>
+            </div>
+            <div class="form-group">
+              <label>型号 *</label>
+              <input type="text" id="f_model" required placeholder="如：737-800">
+            </div>
+            <div class="form-group">
+              <label>分类 *</label>
+              <select id="f_category" required></select>
+            </div>
+            <div class="form-group">
+              <label>产地 *</label>
+              <input type="text" id="f_country" required placeholder="如：美国">
+            </div>
+            <div class="form-group">
+              <label>首飞时间</label>
+              <input type="text" id="f_firstFlight" placeholder="如：1997年">
+            </div>
+            <div class="form-group">
+              <label>生产状态</label>
+              <select id="f_status">
+                <option value="在产">在产</option>
+                <option value="停产">已停产</option>
+                <option value="损毁">损毁</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>描述</label>
+              <textarea id="f_description" rows="2" placeholder="简要描述"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>动力系统</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>发动机数量 *</label>
+              <input type="number" id="f_engineCount" required min="1" max="10" placeholder="2">
+            </div>
+            <div class="form-group">
+              <label>发动机类型 *</label>
+              <select id="f_engineType" required>
+                <option value="涡轮风扇">涡轮风扇</option>
+                <option value="涡轮螺旋桨">涡轮螺旋桨</option>
+                <option value="涡轮轴">涡轮轴</option>
+                <option value="涡轮风扇(加力)">涡轮风扇(加力)</option>
+                <option value="活塞发动机">活塞发动机</option>
+                <option value="电动">电动</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>发动机型号</label>
+              <input type="text" id="f_engineModel" placeholder="如：CFM56-7B">
+            </div>
+            <div class="form-group">
+              <label>燃油容量(L)</label>
+              <input type="number" id="f_fuelCapacity" min="0" placeholder="26020">
+            </div>
+            <div class="form-group">
+              <label>燃油消耗(L/h)</label>
+              <input type="number" id="f_fuelConsumption" min="0" placeholder="2600">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>载客/载货</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>最大座位数 *</label>
+              <input type="number" id="f_maxPassengers" required min="0" placeholder="189">
+            </div>
+            <div class="form-group">
+              <label>典型座位数</label>
+              <input type="number" id="f_typicalPassengers" min="0" placeholder="162">
+            </div>
+            <div class="form-group">
+              <label>载货量(kg)</label>
+              <input type="number" id="f_cargoCapacity" min="0" placeholder="货机填写">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>性能参数</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>最大航程(km) *</label>
+              <input type="number" id="f_maxRange" required min="0" placeholder="5765">
+            </div>
+            <div class="form-group">
+              <label>巡航速度(km/h) *</label>
+              <input type="number" id="f_cruiseSpeed" required min="0" placeholder="842">
+            </div>
+            <div class="form-group">
+              <label>最大速度(km/h)</label>
+              <input type="number" id="f_maxSpeed" min="0" placeholder="876">
+            </div>
+            <div class="form-group">
+              <label>实用升限(m)</label>
+              <input type="number" id="f_serviceCeiling" min="0" placeholder="12500">
+            </div>
+            <div class="form-group">
+              <label>最大起飞重量(kg)</label>
+              <input type="number" id="f_maxTakeoffWeight" min="0" placeholder="79016">
+            </div>
+            <div class="form-group">
+              <label>空重(kg)</label>
+              <input type="number" id="f_emptyWeight" min="0" placeholder="41413">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>尺寸规格</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>翼展(m)</label>
+              <input type="number" id="f_wingspan" min="0" step="0.01" placeholder="35.79">
+            </div>
+            <div class="form-group">
+              <label>机身长度(m) *</label>
+              <input type="number" id="f_length" required min="0" step="0.01" placeholder="39.47">
+            </div>
+            <div class="form-group">
+              <label>高度(m)</label>
+              <input type="number" id="f_height" min="0" step="0.01" placeholder="12.55">
+            </div>
+            <div class="form-group">
+              <label>机舱宽度(m)</label>
+              <input type="number" id="f_cabinWidth" min="0" step="0.01" placeholder="3.54">
+            </div>
+            <div class="form-group">
+              <label>机舱高度(m)</label>
+              <input type="number" id="f_cabinHeight" min="0" step="0.01" placeholder="2.13">
+            </div>
+            <div class="form-group">
+              <label>机舱长度(m)</label>
+              <input type="number" id="f_cabinLength" min="0" step="0.01" placeholder="29.79">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>价格信息</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>最低价格</label>
+              <input type="number" id="f_priceMin" min="0" placeholder="8500">
+            </div>
+            <div class="form-group">
+              <label>最高价格</label>
+              <input type="number" id="f_priceMax" min="0" placeholder="10500">
+            </div>
+            <div class="form-group">
+              <label>价格单位</label>
+              <select id="f_priceUnit">
+                <option value="万美元">万美元</option>
+                <option value="亿人民币">亿人民币</option>
+                <option value="万欧元">万欧元</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>图片管理</h3>
+          <div class="image-upload-area">
+            <div class="upload-hint">支持 JPG/PNG/WebP 格式，单张建议不超过 2MB</div>
+            <div class="image-preview-list" id="imagePreviewList"></div>
+            <div class="upload-actions">
+              <label class="btn btn-outline upload-btn" for="imageFileInput">
+                📷 上传本地图片
+                <input type="file" id="imageFileInput" accept="image/*" multiple style="display:none">
+              </label>
+              <div class="url-add-row">
+                <input type="text" id="imageUrlInput" placeholder="或输入图片URL地址...">
+                <button type="button" class="btn btn-secondary btn-sm" id="addUrlBtn">添加</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加品牌弹窗 -->
+  <div class="modal-overlay" id="brandModal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h2>添加品牌</h2>
+        <button class="modal-close" id="brandModalClose">&times;</button>
+      </div>
+      <form id="brandForm" class="modal-form">
+        <div class="form-group">
+          <label>品牌ID *</label>
+          <input type="text" id="b_id" required placeholder="英文标识，如：boeing">
+        </div>
+        <div class="form-group">
+          <label>品牌名称 *</label>
+          <input type="text" id="b_name" required placeholder="如：波音 Boeing">
+        </div>
+        <div class="form-group">
+          <label>国家/地区</label>
+          <input type="text" id="b_country" placeholder="如：美国">
+        </div>
+        <div class="form-group">
+          <label>Logo标识</label>
+          <input type="text" id="b_logo" placeholder="简短标识，如：B" maxlength="3">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBrandBtn">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加分类弹窗 -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h2>添加分类</h2>
+        <button class="modal-close" id="categoryModalClose">&times;</button>
+      </div>
+      <form id="categoryForm" class="modal-form">
+        <div class="form-group">
+          <label>分类ID *</label>
+          <input type="text" id="c_id" required placeholder="英文标识，如：commercial">
+        </div>
+        <div class="form-group">
+          <label>分类名称 *</label>
+          <input type="text" id="c_name" required placeholder="如：民航客机">
+        </div>
+        <div class="form-group">
+          <label>图标(Emoji)</label>
+          <input type="text" id="c_icon" placeholder="如：✈️" maxlength="4">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">取消</button>
+          <button type="submit" class="btn btn-primary">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
